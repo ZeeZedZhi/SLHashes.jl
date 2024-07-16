@@ -1,8 +1,7 @@
 module SLHashes
 
 using LinearAlgebra: Tridiagonal
-export SLChoices
-
+export SLMatrices
 
 struct SLMatrices
 	A::Matrix{Int}
@@ -12,6 +11,5 @@ struct SLMatrices
 		return new(Tridiagonal(zeros(n-1), ones(n), a*ones(n-1))^l, Tridiagonal(b*ones(n-1), ones(n), zeros(n-1))^l)
 	end
 end
-
 
 end
