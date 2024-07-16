@@ -3,6 +3,9 @@ uuid = "add25b6a-b894-4377-9326-f1cff0dc276c"
 authors = ["Zhi Lin <zhi.liu.lin@outlook.com> and contributors"]
 version = "1.0.0-DEV"
 
+[deps]
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+
 [compat]
 julia = "1.6.7"
 
