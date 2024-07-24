@@ -18,6 +18,8 @@ Use integers to reference matrices; specifically:
 Definitions of `n`, `a`, `b`, and `l` are given in the paper. ``first_lambda`` is the matrix that corresponds to the function that maps the first term.
 """
 function get_slhash(first_lambda::Int, n::Int, a::Int, b::Int, l::Int, mappings::Matrix{Int}, p::Int=0)
+	check_parameters(n, a, b, l)
+
 	A::Matrix{Int} = Tridiagonal(zeros(n-1), ones(n), a*ones(n-1))^l
 	B::Matrix{Int} = Tridiagonal(b*ones(n-1), ones(n), zeros(n-1))^l
 	Ainv::Matrix{Int} = A^-1
@@ -64,5 +66,29 @@ function get_slhash(first_lambda::Int, n::Int, a::Int, b::Int, l::Int, mappings:
 	end
 end
 
+
+function check_parameters(n::Int, a::Int, b::Int, l::Int)
+	if n == 3
+		if mod(a, 3) != 1
+			throw(ArgumentError("a is not 1 mod 3"))
+		end
+
+		if mod(b, 3) != 2
+			throw(ArgumentError("b is not -1 mod 3"))
+		end
+
+		if l <= 1 || !isinteger(log(4, l))
+			throw(ArgumentError("there is no positive integer k such that 4^k = l"))
+		end
+	elseif n > 3
+		if l < 3*(n-1)
+			throw(ArgumentError("l is less than 3(n-1)"))
+		end
+
+		
+	else
+		throw(ArgumentError("n is less than 3"))
+	end
+end
 
 end
