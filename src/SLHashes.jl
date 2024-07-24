@@ -1,21 +1,24 @@
 module SLHashes
 
 using LinearAlgebra: Tridiagonal, I
+using Primes: isprime, factor
 export get_slhash
 
 
 """
     get_slhash(first_lambda::Int, n::Int, a::Int, b::Int, l::Int, mappings::Matrix{Int}, p::Int=0)
 
-Returns a hash function that maps sequences with terms in {1, 2, 3} to `n` by `n` matrices over the finite field of order `p`. nonpositive `p` result in matrices over all integers. 
+Returns a hash function that maps sequences with terms in {1, 2, 3} to `n` by `n` matrices over the finite field of order `p`. nonprime `p` result in matrices over all integers. 
 
-Use integers to reference matrices; specifically:
-	``1`` for ``A``,
-	``2`` for ``B``,
-	``3`` for ``A^-1``, and
-	``4`` for ``B^-1``.
+Use integers to reference matrices; specifically:\n
+	1 for A
+	2 for B
+	3 for A^-1
+	4 for B^-1
 
 Definitions of `n`, `a`, `b`, and `l` are given in the paper. ``first_lambda`` is the matrix that corresponds to the function that maps the first term.
+
+`mappings` is used to choose term mappings as a matrix whose rows respectively correspond to `A`, `B`, `A^-1`, and `B-1` and whose columns respectively correspond to the sequence terms `1`, `2`, and `3`.
 """
 function get_slhash(first_lambda::Int, n::Int, a::Int, b::Int, l::Int, mappings::Matrix{Int}, p::Int=0)
 	check_parameters(n, a, b, l)
@@ -26,7 +29,7 @@ function get_slhash(first_lambda::Int, n::Int, a::Int, b::Int, l::Int, mappings:
 	Ainv::Matrix{Int} = A^-1
 	Binv::Matrix{Int} = B^-1
 
-	if p > 0
+	if isprime(p)
 		A = mod.(A, p)
 		B = mod.(B, p)
 		Ainv = mod.(Ainv, p)
@@ -86,13 +89,9 @@ function check_parameters(n::Int, a::Int, b::Int, l::Int)
 			throw(ArgumentError("l is less than 3(n-1)"))
 		end
 
-		common_factor = gcd(n-1, a-1, b-1)
-
-		if common_factor == 1
-			throw(ArgumentError("there is no prime q such that n = a = b = 1 mod q"))
+		if (local common_factor = gcd(n-1, a-1, b-1)) == 1 || length(factor(Set, gcd(l-1, common_factor))) != 1
+			throw(ArgumentError("there is no prime q such that n = a = b = 1 mod q and q^k + 1 = l for some positive integer k"))
 		end
-
-		
 	else
 		throw(ArgumentError("n is less than 3"))
 	end
