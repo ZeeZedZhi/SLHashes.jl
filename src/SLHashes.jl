@@ -19,6 +19,7 @@ Definitions of `n`, `a`, `b`, and `l` are given in the paper. ``first_lambda`` i
 """
 function get_slhash(first_lambda::Int, n::Int, a::Int, b::Int, l::Int, mappings::Matrix{Int}, p::Int=0)
 	check_parameters(n, a, b, l)
+	check_choices(mappings)
 
 	A::Matrix{Int} = Tridiagonal(zeros(n-1), ones(n), a*ones(n-1))^l
 	B::Matrix{Int} = Tridiagonal(b*ones(n-1), ones(n), zeros(n-1))^l
@@ -85,10 +86,28 @@ function check_parameters(n::Int, a::Int, b::Int, l::Int)
 			throw(ArgumentError("l is less than 3(n-1)"))
 		end
 
+		common_factor = gcd(n-1, a-1, b-1)
+
+		if common_factor == 1
+			throw(ArgumentError("there is no prime q such that n = a = b = 1 mod q"))
+		end
+
 		
 	else
 		throw(ArgumentError("n is less than 3"))
 	end
 end
+
+
+lambdas = Set([1, 2, 3, 4])
+
+function check_choices(mappings::Matrix{Int})
+	for i in 1:4
+		if (local row = Set(mappings[i, :])) != (local codomain = setdiff(lambdas, i))
+			throw(ArgumentError("row $i elements $row does not represent a bijection to $codomain"))
+		end
+	end
+end
+
 
 end
