@@ -11,10 +11,10 @@ export get_slhash
 Returns a hash function that maps sequences with terms in {1, 2, 3} to `n` by `n` matrices over the finite field of order `p`. nonprime `p` result in matrices over all integers. 
 
 Use integers to reference matrices; specifically:\n
-	1 for A
-	2 for B
-	3 for A^-1
-	4 for B^-1
+`1` for `A`\n
+`2` for `B`\n
+`3` for `A^-1`\n
+`4` for `B^-1`\n
 
 Definitions of `n`, `a`, `b`, and `l` are given in the paper. ``first_lambda`` is the matrix that corresponds to the function that maps the first term.
 
