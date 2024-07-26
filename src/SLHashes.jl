@@ -91,7 +91,7 @@ function check_parameters(n::Int, a::Int, b::Int, l::Int)
 			throw(ArgumentError("l is less than 3(n-1)"))
 		end
 
-		if (local common_factor = gcd(n-1, a-1, b-1)) == 1 || length(factor(Set, gcd(l-1, common_factor))) != 1
+		if length((local factors = factor(Set, l-1))) != 1 || mod(a, (local q = first(factors))) != 1 || mod(b, q) != 1 || mod(n, q) != 1
 			throw(ArgumentError("there is no prime q such that n = a = b = 1 mod q and q^k + 1 = l for some positive integer k"))
 		end
 	else
