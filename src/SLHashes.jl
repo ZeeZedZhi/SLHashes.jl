@@ -5,6 +5,8 @@ using Primes: isprime, factor
 export get_slhash
 
 
+inversion = (3, 4, 1, 2)
+
 """
     get_slhash(first_lambda::Int, n::Int, a::Int, b::Int, l::Int, mappings::Matrix{Int}, p::Int=0)
 
@@ -28,8 +30,6 @@ function get_slhash(first_lambda::Int, n::Int, a::Int, b::Int, l::Int, mappings:
 	B::Matrix{Int} = Tridiagonal(b*ones(n-1), ones(n), zeros(n-1))^l
 	Ainv::Matrix{Int} = A^-1
 	Binv::Matrix{Int} = B^-1
-
-	inversion = (3, 4, 1, 2)
 
 	if isprime(p)
 		A = mod.(A, p)
