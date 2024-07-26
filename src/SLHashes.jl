@@ -29,6 +29,8 @@ function get_slhash(first_lambda::Int, n::Int, a::Int, b::Int, l::Int, mappings:
 	Ainv::Matrix{Int} = A^-1
 	Binv::Matrix{Int} = B^-1
 
+	inversion = (3, 4, 1, 2)
+
 	if isprime(p)
 		A = mod.(A, p)
 		B = mod.(B, p)
@@ -45,7 +47,7 @@ function get_slhash(first_lambda::Int, n::Int, a::Int, b::Int, l::Int, mappings:
 				choice = mappings[lambda, x]
 				result *= matrices[choice]
 				result = mod.(result, p)
-				lambda = (choice + 2) % 4
+				lambda = inversion[choice]
 			end
 			return result
 		end
@@ -61,7 +63,7 @@ function get_slhash(first_lambda::Int, n::Int, a::Int, b::Int, l::Int, mappings:
 			for x in sequence
 				choice = mappings[lambda, x]
 				result *= matrices[choice]
-				lambda = (choice + 2) % 4
+				lambda = inversion[choice]
 			end
 			return result
 		end
