@@ -23,7 +23,7 @@ slhash = get_slhash(first_lambda, n, a, b, l, choices, p)
 hash = slhash([2, 2, 3, 2, 2, 2, 1]) #returns [694190977 233260720 29297952; -38379648 -12896255 -1619792; 1191936 400512 50305]
 ```
 
-```choices``` is a 4x3 matrix to specify $s_\lambda$. In accordance with the paper's definition, ```get_slhash``` is set up such that $s(1) = A$, $s(2) = B$, $s(3) = A^{-1}$, $s(4) = B^{-1}. Thus, the matrix 
+```choices``` is a 4x3 matrix to specify $s_\lambda$. In accordance with the paper's definition, ```get_slhash``` is set up such that $s(1) = A$, $s(2) = B$, $s(3) = A^{-1}$, $s(4) = B^{-1}$. Thus, the matrix 
 ```math
   \begin{pmatrix}
     2 & 3 & 4\\
