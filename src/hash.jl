@@ -20,10 +20,10 @@ function get_slhash(first_lambda::Int, n::Int, a::Int, b::Int, l::Int, mappings:
 	check_parameters(n, a, b, l)
 	check_choices(mappings)
 
-	A::Matrix{Int} = Tridiagonal(zeros(n-1), ones(n), a*ones(n-1))^l
-	B::Matrix{Int} = Tridiagonal(b*ones(n-1), ones(n), zeros(n-1))^l
-	Ainv::Matrix{Int} = A^-1
-	Binv::Matrix{Int} = B^-1
+	A::Matrix{Int128} = Tridiagonal(zeros(n-1), ones(n), a*ones(n-1))^l
+	B::Matrix{Int128} = Tridiagonal(b*ones(n-1), ones(n), zeros(n-1))^l
+	Ainv::Matrix{Int128} = A^-1
+	Binv::Matrix{Int128} = B^-1
 
 	if isprime(p)
 		A = mod.(A, p)
@@ -33,9 +33,9 @@ function get_slhash(first_lambda::Int, n::Int, a::Int, b::Int, l::Int, mappings:
 
 		matrices = (A, B, Ainv, Binv)
 
-		function slhashp(sequence::Vector)::Matrix{Int}
+		function slhashp(sequence::Vector)::Matrix{Int128}
 			lambda = first_lambda
-			result = Matrix{Int}(I, n, n)
+			result = Matrix{Int128}(I, n, n)
 
 			for x in sequence
 				choice = mappings[lambda, x]
@@ -50,9 +50,9 @@ function get_slhash(first_lambda::Int, n::Int, a::Int, b::Int, l::Int, mappings:
 	else
 		matrices = (A, B, Ainv, Binv)
 
-		function slhash(sequence::Vector)::Matrix{Int}
+		function slhash(sequence::Vector)::Matrix{Int128}
 			lambda = first_lambda
-			result = Matrix{Int}(I, n, n)
+			result = Matrix{Int128}(I, n, n)
 
 			for x in sequence
 				choice = mappings[lambda, x]
