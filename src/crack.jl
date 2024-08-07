@@ -1,19 +1,19 @@
 function get_mapping(slhash::Function, a::Int, b::Int, l::Int, p::Int=0)::Matrix{Int}
 	n = size(slhash([1]), 1)
 
+	A = Tridiagonal(zeros(BigInt, n-1), ones(BigInt, n), fill(BigInt(a), n-1))^l
+	B = Tridiagonal(fill(BigInt(b), n-1), ones(BigInt, n), zeros(BigInt, n-1))^l
 
-	A::Matrix{Int} = Tridiagonal(zeros(n-1), ones(n), a*ones(n-1))^l
-	B::Matrix{Int} = Tridiagonal(b*ones(n-1), ones(n), zeros(n-1))^l
-	Ainv::Matrix{Int} = A^-1
-	Binv::Matrix{Int} = B^-1
-
-	ISPRIME = false
 	if isprime(p)
-		ISPRIME = true
-		A = mod.(A, p)
-		B = mod.(B, p)
-		Ainv = mod.(Ainv, p)
-		Binv = mod.(Binv, p)
+		F = GF(p)
+
+		A = matrix(F, A)
+		B = matrix(F, B)
+		Ainv = A^-1
+		Binv = B^-1
+	else
+		Ainv = BigInt.(A^-1)
+		Binv = BigInt.(B^-1)
 	end
 
 	matrixToLambda = Dict(A=>1, B=>2, Ainv=>3, Binv=>4)
@@ -38,7 +38,7 @@ function get_mapping(slhash::Function, a::Int, b::Int, l::Int, p::Int=0)::Matrix
 		if mappings[X, x] != inversion[X]
 			for y in 1:3
 				matrix = matrices[inversion[mappings[X, x]]] * slhash([x, y])
-				mappings[inversion[mappings[X, x]], y] = matrixToLambda[ISPRIME ? mod.(matrix, p) : matrix]
+				mappings[inversion[mappings[X, x]], y] = matrixToLambda[matrix]
 			end
 		end
 	end
@@ -51,7 +51,7 @@ function get_mapping(slhash::Function, a::Int, b::Int, l::Int, p::Int=0)::Matrix
 				if mappings[Y, y] == X
 					for z in 1:3
 						matrix = matrices[inversion[X]] * matrices[Y] * slhash([x, y, z])
-						mappings[inversion[X], z] = matrixToLambda[ISPRIME ? mod.(matrix, p) : matrix]
+						mappings[inversion[X], z] = matrixToLambda[matrix]
 					end
 					break
 				end

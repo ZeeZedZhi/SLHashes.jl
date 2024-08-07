@@ -20,50 +20,40 @@ function get_slhash(first_lambda::Int, n::Int, a::Int, b::Int, l::Int, mappings:
 	check_parameters(n, a, b, l)
 	check_choices(mappings)
 
-	A::Matrix{Int128} = Tridiagonal(zeros(n-1), ones(n), a*ones(n-1))^l
-	B::Matrix{Int128} = Tridiagonal(b*ones(n-1), ones(n), zeros(n-1))^l
-	Ainv::Matrix{Int128} = A^-1
-	Binv::Matrix{Int128} = B^-1
+	A = Tridiagonal(zeros(BigInt, n-1), ones(BigInt, n), fill(BigInt(a), n-1))^l
+	B = Tridiagonal(fill(BigInt(b), n-1), ones(BigInt, n), zeros(BigInt, n-1))^l
 
 	if isprime(p)
-		A = mod.(A, p)
-		B = mod.(B, p)
-		Ainv = mod.(Ainv, p)
-		Binv = mod.(Binv, p)
+		F = GF(p)
 
-		matrices = (A, B, Ainv, Binv)
+		A = matrix(F, A)
+		B = matrix(F, B)
+		Ainv = A^-1
+		Binv = B^-1
 
-		function slhashp(sequence::Vector)::Matrix{Int128}
-			lambda = first_lambda
-			result = Matrix{Int128}(I, n, n)
-
-			for x in sequence
-				choice = mappings[lambda, x]
-				result *= matrices[choice]
-				result = mod.(result, p)
-				lambda = inversion[choice]
-			end
-			return result
-		end
-
-		return slhashp
+		blank = identity_matrix(F, n)
 	else
-		matrices = (A, B, Ainv, Binv)
+		Ainv = BigInt.(A^-1)
+		Binv = BigInt.(B^-1)
 
-		function slhash(sequence::Vector)::Matrix{Int128}
-			lambda = first_lambda
-			result = Matrix{Int128}(I, n, n)
-
-			for x in sequence
-				choice = mappings[lambda, x]
-				result *= matrices[choice]
-				lambda = inversion[choice]
-			end
-			return result
-		end
-
-		return slhash
+		blank = Matrix{BigInt}(I, n, n)
 	end
+
+	matrices = (A, B, Ainv, Binv)
+
+	function slhash(sequence::Vector)
+		lambda = first_lambda
+		result = blank
+
+		for x in sequence
+			choice = mappings[lambda, x]
+			result *= matrices[choice]
+			lambda = inversion[choice]
+		end
+		return result
+	end
+
+	return slhash
 end
 
 

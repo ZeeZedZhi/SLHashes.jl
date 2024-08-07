@@ -1,4 +1,5 @@
 using SLHashes
+using AbstractAlgebra: GF, matrix
 using Test
 
 @testset "SLHashes.jl" begin
@@ -19,7 +20,7 @@ using Test
 	for prime in primes
 		testhashp = get_slhash(1, n, a, b, l, mappings, prime)
 		@test get_mapping(testhashp, a, b, l, prime) == mappings
-		@test testhashp(sequence) == mod.([694190977 233260720 29297952; -38379648 -12896255 -1619792; 1191936 400512 50305], prime)
+		@test testhashp(sequence) == matrix(GF(prime), [694190977 233260720 29297952; -38379648 -12896255 -1619792; 1191936 400512 50305])
 	end
 
 end
