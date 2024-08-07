@@ -1,6 +1,6 @@
 module SLHashes
 
-using LinearAlgebra: Tridiagonal, I
+using LinearAlgebra: I, Tridiagonal
 using Primes: isprime, factor
 using AbstractAlgebra: GF, identity_matrix, matrix
 

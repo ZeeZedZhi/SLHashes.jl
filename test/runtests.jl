@@ -3,7 +3,6 @@ using AbstractAlgebra: GF, matrix
 using Test
 
 @testset "SLHashes.jl" begin
-
 	n = 3
 	a = 4
 	b = 2

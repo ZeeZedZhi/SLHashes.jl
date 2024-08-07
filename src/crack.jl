@@ -1,8 +1,8 @@
 function get_mapping(slhash::Function, a::Int, b::Int, l::Int, p::Int=0)::Matrix{Int}
 	n = size(slhash([1]), 1)
 
-	A = Tridiagonal(zeros(BigInt, n-1), ones(BigInt, n), fill(BigInt(a), n-1))^l
-	B = Tridiagonal(fill(BigInt(b), n-1), ones(BigInt, n), zeros(BigInt, n-1))^l
+	A = Matrix(Tridiagonal(zeros(BigInt, n-1), ones(BigInt, n), fill(BigInt(a), n-1))^l)
+	B = Matrix(Tridiagonal(fill(BigInt(b), n-1), ones(BigInt, n), zeros(BigInt, n-1))^l)
 
 	if isprime(p)
 		F = GF(p)
