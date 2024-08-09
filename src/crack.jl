@@ -1,5 +1,5 @@
 function get_mapping(slhash::Function, a::Int, b::Int, l::Int, p::Int=0)::Matrix{Int}
-	n = size(slhash([1]), 1)
+	n = size(slhash(1), 1)
 
 	A = Matrix(Tridiagonal(zeros(BigInt, n-1), ones(BigInt, n), fill(BigInt(a), n-1))^l)
 	B = Matrix(Tridiagonal(fill(BigInt(b), n-1), ones(BigInt, n), zeros(BigInt, n-1))^l)
@@ -24,7 +24,7 @@ function get_mapping(slhash::Function, a::Int, b::Int, l::Int, p::Int=0)::Matrix
 	seen = Set(1:4)
 	submapping = Dict()
 	for j in 1:3
-		submapping[j] = matrixToLambda[slhash([j])]
+		submapping[j] = matrixToLambda[slhash(j)]
 		pop!(seen, submapping[j])
 	end
 
@@ -37,7 +37,7 @@ function get_mapping(slhash::Function, a::Int, b::Int, l::Int, p::Int=0)::Matrix
 	for x in 1:3
 		if mappings[X, x] != inversion[X]
 			for y in 1:3
-				matrix = matrices[inversion[mappings[X, x]]] * slhash([x, y])
+				matrix = matrices[inversion[mappings[X, x]]] * slhash(x, y)
 				mappings[inversion[mappings[X, x]], y] = matrixToLambda[matrix]
 			end
 		end
@@ -50,7 +50,7 @@ function get_mapping(slhash::Function, a::Int, b::Int, l::Int, p::Int=0)::Matrix
 			for y in 1:3
 				if mappings[Y, y] == X
 					for z in 1:3
-						matrix = matrices[inversion[X]] * matrices[Y] * slhash([x, y, z])
+						matrix = matrices[inversion[X]] * matrices[Y] * slhash(x, y, z)
 						mappings[inversion[X], z] = matrixToLambda[matrix]
 					end
 					break

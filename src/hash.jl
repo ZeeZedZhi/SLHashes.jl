@@ -41,7 +41,7 @@ function get_slhash(first_lambda::Int, n::Int, a::Int, b::Int, l::Int, mappings:
 
 	matrices = (A, B, Ainv, Binv)
 
-	function slhash(sequence::Vector)
+	function slhash(sequence::Int...)
 		lambda = first_lambda
 		result = blank
 
