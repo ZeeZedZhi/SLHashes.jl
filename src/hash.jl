@@ -53,6 +53,18 @@ function get_slhash(first_lambda::Int, n::Int, a::Int, b::Int, l::Int, mappings:
 		return result
 	end
 
+	function slhash(sequence)
+		lambda = first_lambda
+		result = blank
+
+		for x in sequence
+			choice = mappings[lambda, x]
+			result *= matrices[choice]
+			lambda = inversion[choice]
+		end
+		return result
+	end
+
 	return slhash
 end
 
